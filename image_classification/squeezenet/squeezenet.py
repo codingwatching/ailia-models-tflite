@@ -163,15 +163,15 @@ def recognize_from_video():
         preds_tf_lite = interpreter.get_tensor(output_details[0]['index'])
 
         plot_results(
-            input_image, preds_tf_lite, squeezenet_labels.imagenet_category
+            frame, preds_tf_lite, squeezenet_labels.imagenet_category
         )
         if not args.no_gui:
-            cv2.imshow('frame', input_image)
+            cv2.imshow('frame', frame)
         time.sleep(SLEEP_TIME)
 
         # save results
         if writer is not None:
-            writer.write(input_image)
+            writer.write(frame)
 
     capture.release()
     cv2.destroyAllWindows()

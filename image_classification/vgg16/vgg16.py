@@ -164,10 +164,10 @@ def recognize_from_video(interpreter):
 
         # postprocessing
         plot_results(
-            input_image, preds_tf_lite, vgg16_labels.imagenet_category
+            frame, preds_tf_lite, vgg16_labels.imagenet_category
         )
         if not args.no_gui:
-            cv2.imshow('frame', input_image)
+            cv2.imshow('frame', frame)
         frame_shown = True
         time.sleep(SLEEP_TIME)
 

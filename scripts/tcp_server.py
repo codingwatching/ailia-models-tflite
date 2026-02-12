@@ -115,7 +115,7 @@ def recv_thread(idx, addr):
 #---------------------------
 # グリッド表示用関数
 #---------------------------
-def make_grid(frames, rows=1, cols=3, cell_size=(320,240)):
+def make_grid(frames, rows=1, cols=3, cell_size=(640,480)):
     canvas = np.zeros((cell_size[1]*rows, cell_size[0]*cols, 3), dtype=np.uint8)
     for i,frame in enumerate(frames):
         if frame is None:
@@ -177,8 +177,10 @@ def main():
             with recv_locks[i]:
                 frame = recv_frames[i].copy() if recv_frames[i] is not None else None
             frames_copy.append(frame)
-        grid = make_grid(frames_copy, 1, n_clients)
-        cv2.imshow("Results Grid", grid)
+        n_row = 2
+        n_col = (n_clients + n_row - 1) // n_row
+        grid = make_grid(frames_copy, n_col, n_row)
+        cv2.imshow("ailia TFLite Runtime Multi Model Inference", grid)
         key = cv2.waitKey(1)
         if key == 27:  # ESC
             stop_flag = True
