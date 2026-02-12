@@ -333,7 +333,8 @@ def recognize_from_video():
 
         visual_img = frame
         frame = draw_bbox(frame, boxes, scores, classes)
-        cv2.imshow('frame', visual_img)
+        if not args.no_gui:
+            cv2.imshow('frame', visual_img)
 
         # save results
         if writer is not None:

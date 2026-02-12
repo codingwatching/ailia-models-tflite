@@ -217,7 +217,8 @@ def recognize_from_video():
         preds_tf_lite = smooth_output(preds_tf_lite, IMAGE_HEIGHT, IMAGE_WIDTH)
         preds_tf_lite = gen_preds_img_np(preds_tf_lite, IMAGE_HEIGHT, IMAGE_WIDTH)
 
-        cv2.imshow("Inference result", preds_tf_lite)
+        if not args.no_gui:
+            cv2.imshow("Inference result", preds_tf_lite)
 
         # save results
         if writer is not None:

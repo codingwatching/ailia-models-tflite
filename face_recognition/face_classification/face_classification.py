@@ -372,7 +372,8 @@ def recognize_from_video(interpreter_emo, interpreter_gen, interpreter_det):
                 )
 
         # show result
-        cv2.imshow('frame', render_image)
+        if not args.no_gui:
+            cv2.imshow('frame', render_image)
         frame_shown = True
         time.sleep(SLEEP_TIME)
 

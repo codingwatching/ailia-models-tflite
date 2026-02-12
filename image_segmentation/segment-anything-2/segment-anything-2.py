@@ -367,7 +367,8 @@ def recognize_from_video(image_encoder, prompt_encoder, mask_decoder, memory_att
             frame = show_points(input_point.astype(np.int64), input_label.astype(np.int64), frame)
             frame = show_box(input_box, frame)
 
-        cv2.imshow('frame', frame)
+        if not args.no_gui:
+            cv2.imshow('frame', frame)
         if frame_names is not None:
             cv2.imwrite(f'video_{frame_idx}.png', frame)
 

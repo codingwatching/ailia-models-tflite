@@ -449,7 +449,8 @@ def recognize_from_video(interpreter_pose, interpreter_detect):
         # plot result
         res_img = plot_results(boxes, scores, classes, frame, COCO_CATEGORY, pose_detections)
 
-        cv2.imshow('frame', res_img)
+        if not args.no_gui:
+            cv2.imshow('frame', res_img)
         frame_shown = True
         # save results
         if writer is not None:

@@ -189,7 +189,8 @@ def recognize_from_video():
         # postprocessing
         detections = but.postprocess(preds_tf_lite, file_abs_path(__file__, "anchors.npy"))
         but.show_result(input_image, detections)
-        cv2.imshow('frame', input_image)
+        if not args.no_gui:
+            cv2.imshow('frame', input_image)
 
         # save results
         if writer is not None:

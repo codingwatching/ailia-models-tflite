@@ -114,6 +114,10 @@ def recognize_from_video(interpreter):
     # create video writer if savepath is specified as video format
     f_h = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
     f_w = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    if args.savepath != SAVE_IMAGE_PATH:
+        writer = webcamera_utils.get_writer(args.savepath, f_h, f_w)
+    else:
+        writer = None
     
     frame_shown = False
     while(True):
@@ -154,10 +158,17 @@ def recognize_from_video(interpreter):
         frame[:, :, 1] = frame[:, :, 1] * pred + 177 * (1 - pred)
         frame[:, :, 2] = frame[:, :, 2] * pred
 
-        cv2.imshow('frame', frame.astype(np.uint8))
+        if not args.no_gui:
+            cv2.imshow('frame', frame.astype(np.uint8))
         frame_shown = True
 
+        # save results
+        if writer is not None:
+            writer.write(frame.astype(np.uint8))
+
     capture.release()
+    if writer is not None:
+        writer.release()
     logger.info('Script finished successfully.')
 
 

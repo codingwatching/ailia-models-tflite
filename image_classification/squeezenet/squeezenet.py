@@ -165,7 +165,8 @@ def recognize_from_video():
         plot_results(
             input_image, preds_tf_lite, squeezenet_labels.imagenet_category
         )
-        cv2.imshow('frame', input_image)
+        if not args.no_gui:
+            cv2.imshow('frame', input_image)
         time.sleep(SLEEP_TIME)
 
         # save results

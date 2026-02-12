@@ -237,11 +237,12 @@ def recognize_from_video():
         #bilinear_img = cv2.resize(frame, (out_img_y.shape[1], out_img_y.shape[0]))
         #out_img[:, 0:out_img.shape[1]//2, :] = bilinear_img[:, 0:out_img.shape[1]//2, :]
 
-        cv2.imshow('frame', out_img)
+        if not args.no_gui:
+            cv2.imshow('frame', out_img)
         frame_shown = True
-        # # save results
-        # if writer is not None:
-        #     writer.write(output_img)
+        # save results
+        if writer is not None:
+            writer.write(out_img)
 
     capture.release()
     cv2.destroyAllWindows()

@@ -262,7 +262,8 @@ def recognize_from_video(interpreter):
         output_frame[:,0:save_w,:]=frame_mini
         output_frame = output_frame.astype("uint8")
 
-        cv2.imshow('depth', output_frame)
+        if not args.no_gui:
+            cv2.imshow('depth', output_frame)
         frame_shown = True
 
         # save results

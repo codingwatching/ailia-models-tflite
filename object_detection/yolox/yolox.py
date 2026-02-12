@@ -276,11 +276,12 @@ def recognize_from_video():
                 frame, final_boxes, final_scores, final_cls_inds,
                 COCO_CATEGORY, normalized_boxes=False, logger=logger)
 
-        cv2.imshow('frame', visual_img)
+        if not args.no_gui:
+            cv2.imshow('frame', visual_img)
 
         # save results
         if writer is not None:
-            writer.write(res_img)
+            writer.write(visual_img)
 
         # write prediction
         if args.write_prediction:

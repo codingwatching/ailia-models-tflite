@@ -333,7 +333,8 @@ def recognize_from_video():
         if args.video == '0': # Flip horizontally if camera
             visual_img = np.ascontiguousarray(frame[:,::-1,:])
 
-        cv2.imshow('frame', visual_img)
+        if not args.no_gui:
+            cv2.imshow('frame', visual_img)
 
         # save results
         if writer is not None:

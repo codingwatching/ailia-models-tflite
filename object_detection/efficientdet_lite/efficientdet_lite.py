@@ -359,7 +359,8 @@ def recognize_from_video():
         confs = confs[0]
 
         frame = draw_bbox(frame, bboxes, confs, class_ids)
-        cv2.imshow('frame', frame)
+        if not args.no_gui:
+            cv2.imshow('frame', frame)
 
         # save results
         if writer is not None:

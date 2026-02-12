@@ -188,7 +188,8 @@ def segment_from_video():
         seg_img = cv2.cvtColor(seg_img, cv2.COLOR_RGB2BGR)
         seg_overlay = cv2.addWeighted(input_image, 1.0, seg_img, 0.9, 0)
 
-        cv2.imshow('frame', seg_overlay)
+        if not args.no_gui:
+            cv2.imshow('frame', seg_overlay)
 
         # save results
         if writer is not None:

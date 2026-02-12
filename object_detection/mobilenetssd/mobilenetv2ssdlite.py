@@ -162,7 +162,8 @@ def recognize_from_video():
         # postprocessing
         mut.postprocessing(input_image, boxes, classes, scores)
 
-        cv2.imshow('frame', input_image)
+        if not args.no_gui:
+            cv2.imshow('frame', input_image)
 
         # save results
         if writer is not None:
