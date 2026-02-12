@@ -23,3 +23,4 @@ cd ..\\..\\object_detection\\efficientdet_lite& python efficientdet_lite.py %OPT
 cd ..\\..\\pose_estimation\\pose_resnet& python pose_resnet.py %OPTION%
 cd ..\\..\\super_resolution\\srresnet& python srresnet.py %OPTION%
 cd ..\\..\\super_resolution\\espcn& python espcn.py %OPTION%
+cd ..\\..\\scripts
