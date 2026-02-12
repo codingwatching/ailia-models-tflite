@@ -1,0 +1,7 @@
+# ailia MODELS TFLITE TCP CLIENT
+export OPTION=""
+#export OPTION="--thread_pool_num_threads 1"
+python3 ../image_classification/resnet50/resnet50.py -v "127.0.0.1:8000" -s "127.0.0.1:8003" ${OPTION} &
+python3 ../face_recognition/facemesh/facemesh.py -v "127.0.0.1:8001" -s "127.0.0.1:8004" ${OPTION} &
+python3 ../object_detection/yolox/yolox.py -v "127.0.0.1:8002" -s "127.0.0.1:8005" ${OPTION} &
+wait
