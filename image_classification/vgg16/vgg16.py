@@ -168,7 +168,7 @@ def recognize_from_video(interpreter):
         )
         if not args.no_gui:
             cv2.imshow('frame', frame)
-        frame_shown = True
+            frame_shown = True
         time.sleep(SLEEP_TIME)
 
         # save results

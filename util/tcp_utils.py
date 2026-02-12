@@ -6,7 +6,7 @@ import numpy as np
 
 class TcpVideoWriter:
     """Send frames over TCP (encoded with JPEG, with size header)"""
-    def __init__(self, addr, height, width, fps=20, rgb=True, quality=90):
+    def __init__(self, addr, height, width, fps=20, rgb=True, quality=95):
         host, port = addr.split(':')
         port = int(port)
 
@@ -18,7 +18,6 @@ class TcpVideoWriter:
         self.fps = fps
         self.rgb = rgb
         self.sock = None
-        self.cnt = 0
         self.isOpened_flag = True
     
     def connect(self):
@@ -34,9 +33,6 @@ class TcpVideoWriter:
         """Send JPEG + size(header)"""
         self.connect()
         try:
-            print("Write frame " + str(self.cnt))
-            self.cnt = self.cnt + 1
-
             result, encimg = cv2.imencode(".jpg", frame, self.encode_param)
             if not result:
                 print("[TcpVideoWriter] imencode failed.")
@@ -78,7 +74,6 @@ class TcpVideoReader:
         self.conn, self.client_addr = self.sock.accept()
         print(f"[TcpVideoReader] Connection from {self.client_addr}")
 
-        self.cnt = 0
         self.isOpened_flag = True
         self.payload_size = struct.calcsize(">L")  # サイズヘッダは 4バイト
 
@@ -95,9 +90,6 @@ class TcpVideoReader:
     def read(self):
         """1フレーム分受信"""
         try:
-            print("Read frame " + str(self.cnt))
-            self.cnt = self.cnt + 1
-
             # まずJPEGデータサイズ(4B)
             packed_size = self._recvall(self.payload_size)
             if not packed_size:

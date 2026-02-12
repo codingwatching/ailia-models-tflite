@@ -264,7 +264,7 @@ def recognize_from_video(interpreter):
 
         if not args.no_gui:
             cv2.imshow('depth', output_frame)
-        frame_shown = True
+            frame_shown = True
 
         # save results
         if writer is not None:

@@ -239,7 +239,7 @@ def recognize_from_video():
 
         if not args.no_gui:
             cv2.imshow('frame', out_img)
-        frame_shown = True
+            frame_shown = True
         # save results
         if writer is not None:
             writer.write(out_img)

@@ -29,10 +29,11 @@ import webcamera_utils
 #---------------------------
 # グローバル変数
 #---------------------------
-recv_frames = [None, None, None]
-recv_locks  = [threading.Lock() for _ in range(3)]
-recv_counts = [0, 0, 0]   # 受信数
-send_counts = [0, 0, 0]   # 送信数
+NUM_MODEL_MAX = 16
+recv_frames = [None for _ in range(NUM_MODEL_MAX)]
+recv_locks  = [threading.Lock() for _ in range(NUM_MODEL_MAX)]
+recv_counts = [0 for _ in range(NUM_MODEL_MAX)]   # 受信数
+send_counts = [0 for _ in range(NUM_MODEL_MAX)]   # 送信数
 stop_flag   = False
 
 # Mutex for count updates
@@ -41,7 +42,14 @@ count_lock = threading.Lock()
 #---------------------------
 # カメラ画像をクライアントに送信するスレッド
 #---------------------------
-def send_controlled_thread(writers, cap, n_clients):
+def resize_frame(frame, target_width):
+    h, w = frame.shape[:2]
+    new_w = target_width
+    new_h = int(h * (new_w / w))
+    resized = cv2.resize(frame, (new_w, new_h))
+    return resized
+
+def send_controlled_thread(writers, cap, n_clients, target_width):
     global stop_flag, recv_counts, send_counts
 
     print("[Thread] camera capture and controlled send started")
@@ -54,7 +62,7 @@ def send_controlled_thread(writers, cap, n_clients):
             break
         for ci, w in enumerate(writers):
             try:
-                w.write(frame)
+                w.write(resize_frame(frame, target_width))
                 with count_lock:
                     send_counts[ci] += 1
             except Exception as e:
@@ -75,7 +83,7 @@ def send_controlled_thread(writers, cap, n_clients):
         for ci in range(n_clients):
             if should_send[ci]:  # このクライアントは送信許可
                 try:
-                    writers[ci].write(frame)
+                    writers[ci].write(resize_frame(frame, target_width))
                     with count_lock:
                         send_counts[ci] += 1
                 except Exception as e:
@@ -136,8 +144,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--video_ports', nargs='+', required=True)
     parser.add_argument('-s', '--show_ports',  nargs='+', required=True)
-    parser.add_argument('--width',  type=int, default=640)
-    parser.add_argument('--height', type=int, default=480)
+    parser.add_argument('--width',  type=int, default=640, help="送受信するカメラ画像の横幅を指定します。")
+    parser.add_argument('--height', type=int, default=480, help="送受信するカメラ画像の高さを指定します。")
     args = parser.parse_args()
 
     if len(args.video_ports) != len(args.show_ports):
@@ -158,7 +166,7 @@ def main():
 
     # 送信スレッド
     sender_thread = threading.Thread(target=send_controlled_thread,
-                                     args=(writers, cap, n_clients),
+                                     args=(writers, cap, n_clients, args.width),
                                      daemon=True)
     sender_thread.start()
 
@@ -179,7 +187,7 @@ def main():
             frames_copy.append(frame)
         n_row = 2
         n_col = (n_clients + n_row - 1) // n_row
-        grid = make_grid(frames_copy, n_col, n_row)
+        grid = make_grid(frames_copy, n_col, n_row, (args.width, args.height))
         cv2.imshow("ailia TFLite Runtime Multi Model Inference", grid)
         key = cv2.waitKey(1)
         if key == 27:  # ESC

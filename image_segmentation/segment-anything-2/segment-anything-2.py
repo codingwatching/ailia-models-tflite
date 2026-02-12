@@ -374,8 +374,8 @@ def recognize_from_video(image_encoder, prompt_encoder, mask_decoder, memory_att
 
         if writer is not None:
             writer.write(frame)
+            frame_shown = True
 
-        frame_shown = True
         frame_idx = frame_idx + 1
 
     if writer is not None:
