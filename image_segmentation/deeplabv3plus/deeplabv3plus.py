@@ -22,7 +22,7 @@ find_and_append_util_path()
 
 from utils import file_abs_path, get_base_parser, update_parser, get_savepath, delegate_obj  # noqa: E402
 from model_utils import check_and_download_models, format_input_tensor  # noqa: E402
-from image_utils import load_image  # noqa: E402
+from image_utils import load_image, draw_fps, calc_fps  # noqa: E402
 import webcamera_utils  # noqa: E402
 from deeplab_utils import *
 
@@ -164,6 +164,7 @@ def segment_from_video():
     else:
         writer = None
 
+    prev_time = time.time()
     while(True):
         ret, frame = capture.read()
         if (args.no_gui == False and cv2.waitKey(1) & 0xFF == ord('q')) or not ret:
@@ -189,6 +190,9 @@ def segment_from_video():
         seg_overlay = cv2.addWeighted(input_image, 1.0, seg_img, 0.9, 0)
 
         if not args.no_gui:
+            fps, prev_time = calc_fps(prev_time)
+            if args.fps:
+                draw_fps(seg_overlay, fps)
             cv2.imshow('frame', seg_overlay)
 
         # save results

@@ -21,7 +21,7 @@ find_and_append_util_path()
 
 from utils import file_abs_path, get_base_parser, update_parser, get_savepath, delegate_obj  # noqa: E402
 from model_utils import check_and_download_models, format_input_tensor, get_output_tensor  # noqa: E402
-from image_utils import load_image  # noqa: E402
+from image_utils import load_image, draw_fps, calc_fps  # noqa: E402
 from classifier_utils import plot_results, print_results, write_predictions  # noqa: E402
 import webcamera_utils  # noqa: E402
 import mobilenetv2_labels
@@ -197,6 +197,7 @@ def recognize_from_video():
     if args.float or not args.legacy:
         dtype = np.float32
 
+    prev_time = time.time()
     while(True):
         ret, frame = capture.read()
         if (args.no_gui == False and cv2.waitKey(1) & 0xFF == ord('q')) or not ret:
@@ -221,6 +222,10 @@ def recognize_from_video():
         plot_results(
             frame, preds_tf_lite, mobilenetv2_labels.imagenet_category
         )
+        # FPS overlay
+        fps, prev_time = calc_fps(prev_time)
+        if args.fps:
+            draw_fps(frame, fps)
         if not args.no_gui:
             cv2.imshow('frame', frame)
         time.sleep(SLEEP_TIME)

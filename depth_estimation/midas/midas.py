@@ -19,7 +19,7 @@ def find_and_append_util_path():
 
 find_and_append_util_path()
 
-from image_utils import resize_image, load_image  # noqa: E402
+from image_utils import resize_image, load_image, draw_fps, calc_fps  # noqa: E402
 from model_utils import check_and_download_models, format_input_tensor, get_output_tensor # noqa: E402
 from utils import file_abs_path, get_base_parser, get_savepath, update_parser, delegate_obj  # noqa: E402
 from webcamera_utils import get_capture, get_writer, preprocess_frame  # noqa: E402
@@ -218,6 +218,7 @@ def recognize_from_video(interpreter):
 
     input_shape_set = False
     frame_shown = False
+    prev_time = time.time()
     while(True):
         ret, frame = capture.read()
 
@@ -267,6 +268,9 @@ def recognize_from_video(interpreter):
         output_frame = res_img
 
         if not args.no_gui:
+            fps, prev_time = calc_fps(prev_time)
+            if args.fps:
+                draw_fps(output_frame, fps)
             cv2.imshow('depth', output_frame)
             frame_shown = True
 

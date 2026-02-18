@@ -24,6 +24,7 @@ find_and_append_util_path()
 from utils import get_base_parser, update_parser, get_savepath  # noqa
 from model_utils import check_and_download_models  # noqa
 from webcamera_utils import get_capture, get_writer  # noqa
+from image_utils import draw_fps, calc_fps  # noqa
 
 logger = getLogger(__name__)
 
@@ -330,6 +331,7 @@ def recognize_from_video(image_encoder, prompt_encoder, mask_decoder, memory_att
     predictor.reset_state(inference_state)
 
     frame_shown = False
+    prev_time = time.time()
 
     frame_idx = 0
     while (True):
@@ -368,6 +370,9 @@ def recognize_from_video(image_encoder, prompt_encoder, mask_decoder, memory_att
             frame = show_box(input_box, frame)
 
         if not args.no_gui:
+            fps, prev_time = calc_fps(prev_time)
+            if args.fps:
+                draw_fps(frame, fps)
             cv2.imshow('frame', frame)
         if frame_names is not None:
             cv2.imwrite(f'video_{frame_idx}.png', frame)

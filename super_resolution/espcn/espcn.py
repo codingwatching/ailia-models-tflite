@@ -21,6 +21,7 @@ find_and_append_util_path()
 
 
 from utils import file_abs_path, get_base_parser, update_parser, get_savepath  # noqa: E402
+from image_utils import draw_fps, calc_fps  # noqa: E402
 from model_utils import check_and_download_models  # noqa: E402
 import webcamera_utils  # noqa: E402
 
@@ -192,6 +193,7 @@ def recognize_from_video():
     output_details = interpreter.get_output_details()
 
     frame_shown = False
+    prev_time = time.time()
     while(True):
         ret, frame = capture.read()
         if (args.no_gui == False and cv2.waitKey(1) & 0xFF == ord('q')) or not ret:
@@ -238,6 +240,9 @@ def recognize_from_video():
         #out_img[:, 0:out_img.shape[1]//2, :] = bilinear_img[:, 0:out_img.shape[1]//2, :]
 
         if not args.no_gui:
+            fps, prev_time = calc_fps(prev_time)
+            if args.fps:
+                draw_fps(out_img, fps)
             cv2.imshow('frame', out_img)
             frame_shown = True
         # save results

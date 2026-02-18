@@ -22,7 +22,7 @@ find_and_append_util_path()
 
 from utils import file_abs_path, get_base_parser, update_parser, delegate_obj  # noqa: E402
 from model_utils import check_and_download_models  # noqa: E402
-from image_utils import load_image  # noqa: E402
+from image_utils import load_image, draw_fps, calc_fps  # noqa: E402
 from classifier_utils import plot_results, print_results  # noqa: E402
 import webcamera_utils  # noqa: E402
 import squeezenet_labels
@@ -147,6 +147,7 @@ def recognize_from_video():
     else:
         writer = None
 
+    prev_time = time.time()
     while(True):
         ret, frame = capture.read()
         if (args.no_gui == False and cv2.waitKey(1) & 0xFF == ord('q')) or not ret:
@@ -165,6 +166,10 @@ def recognize_from_video():
         plot_results(
             frame, preds_tf_lite, squeezenet_labels.imagenet_category
         )
+        # FPS overlay
+        fps, prev_time = calc_fps(prev_time)
+        if args.fps:
+            draw_fps(frame, fps)
         if not args.no_gui:
             cv2.imshow('frame', frame)
         time.sleep(SLEEP_TIME)

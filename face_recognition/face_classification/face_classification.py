@@ -21,7 +21,7 @@ find_and_append_util_path()
 
 
 import webcamera_utils  # noqa: E402
-from image_utils import load_image  # noqa: E402
+from image_utils import load_image, draw_fps, calc_fps  # noqa: E402
 from model_utils import check_and_download_models, format_input_tensor, get_output_tensor  # noqa: E402
 from utils import file_abs_path, get_base_parser, update_parser, delegate_obj  # noqa: E402
 import blazeface_utils as but
@@ -244,6 +244,7 @@ def recognize_from_video(interpreter_emo, interpreter_gen, interpreter_det):
         writer = None
 
     frame_shown = False
+    prev_time = time.time()
     while(True):
         ret, frame = capture.read()
 
@@ -373,6 +374,9 @@ def recognize_from_video(interpreter_emo, interpreter_gen, interpreter_det):
 
         # show result
         if not args.no_gui:
+            fps, prev_time = calc_fps(prev_time)
+            if args.fps:
+                draw_fps(render_image, fps)
             cv2.imshow('frame', render_image)
             frame_shown = True
         time.sleep(SLEEP_TIME)
