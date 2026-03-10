@@ -12,7 +12,6 @@ cd ../../image_classification/mobilenetv2; python3 mobilenetv2.py ${OPTION}
 cd ../../image_classification/resnet50; python3 resnet50.py ${OPTION}
 cd ../../image_classification/vgg16; python3 vgg16.py ${OPTION}
 cd ../../image_classification/squeezenet; python3 squeezenet.py ${OPTION}
-cd ../../image_classification/efficientnet_lite; python3 efficientnet_lite.py ${OPTION}
 cd ../../image_classification/googlenet; python3 googlenet.py ${OPTION}
 cd ../../image_segmentation/deeplabv3plus; python3 deeplabv3plus.py ${OPTION}
 cd ../../image_segmentation/hrnet_segmentation; python3 hrnet_segmentation.py ${OPTION}
